@@ -3,6 +3,8 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Check, Mail, Phone, Recycle, User, X, ArrowRight } from "lucide-react"
+import { AnimatePresence, motion } from "motion/react"
+import Link from "next/link"
 import { useState } from "react"
 
 export default function DonationFormPage() {
@@ -63,15 +65,25 @@ export default function DonationFormPage() {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-emerald-50 via-white to-teal-50 pt-24 pb-16 px-4">
+    <motion.div
+      initial={{ opacity: 0, y: -40 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{
+          duration: 0.2,
+          scale: { type: "spring", visualDuration: 0.7, bounce: 0.1 },
+      }}
+      className="min-h-screen bg-linear-to-br from-emerald-50 via-white to-teal-50 pt-24 pb-16 px-4">
       <div className="container mx-auto max-w-4xl">
         <div className="mb-8">
+          <Link href="/">
           <button
             className="flex items-center gap-2 text-emerald-700 hover:text-emerald-800 font-semibold transition-colors group"
           >
             <ArrowRight className="w-5 h-5 rotate-180 group-hover:-translate-x-1 transition-transform" />
             Voltar para Início
           </button>
+          </Link>
         </div>
 
         <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 md:p-12 border-2 border-emerald-100">
@@ -87,14 +99,31 @@ export default function DonationFormPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-8">
-            {/* Personal Data Section */}
-            <div className="space-y-6">
-              <div className="border-l-4 border-emerald-600 pl-4">
-                <h3 className="text-2xl font-bold text-gray-900">Dados Pessoais</h3>
-                <p className="text-sm text-gray-600 mt-1">Informações para contato e agendamento da coleta</p>
-              </div>
 
-              <div>
+            <div className="space-y-6">
+              <motion.div className="flex items-center gap-3 pb-3 border-b border-gray-200">
+
+                <div className="w-10 h-10 rounded-full bg-linear-to-r from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold shadow-md">
+                  1
+                </div>
+
+                <div>
+                  <h3 className="text-xl md:text-2xl font-bold text-gray-900">Dados Pessoais</h3>
+                  <p className="text-sm text-gray-500">Informações para contato e coleta</p>
+                </div>
+
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0 }}
+                transition={{
+                  duration: 0.5,
+                   scale: { type: "spring", visualDuration: 0.4, bounce: 0.2 }
+                }}
+              >
+
                 <label className="block text-sm font-bold text-gray-700 mb-2">Nome Completo *</label>
                 <div className="relative">
                   <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -107,9 +136,19 @@ export default function DonationFormPage() {
                     placeholder="João Silva"
                   />
                 </div>
-              </div>
 
-              <div className="grid md:grid-cols-2 gap-6">
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0 }}
+                transition={{
+                  duration: 0.5,
+                  scale: { type: "spring", visualDuration: 0.4, bounce: 0.2 }
+                }}
+
+                className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-2">E-mail *</label>
                   <div className="relative">
@@ -139,17 +178,31 @@ export default function DonationFormPage() {
                     />
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
 
 
 
-            {/* Items Selection Section */}
-            <div className="space-y-6">
-              <div className="border-l-4 border-rose-600 pl-4">
-                <h3 className="text-2xl font-bold text-gray-900">Itens para Doação</h3>
-                <p className="text-sm text-gray-600 mt-1">Selecione os materiais que você deseja doar</p>
-              </div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0 }}
+              transition={{
+                duration: 0.5,
+                scale: { type: "spring", visualDuration: 0.4, bounce: 0.2 }
+              }}
+              className="space-y-6">
+              <motion.div className="flex items-center gap-3 pb-3 border-b border-gray-200">
+                <div className="w-10 h-10 rounded-full bg-linear-to-r from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold shadow-md">
+                  2
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900">Itens para Doação</h3>
+                  <p className="text-sm text-gray-600 mt-1">Selecione os materiais que você deseja doar</p>
+                </div>
+              </motion.div>
+
 
               <div className="bg-linear-to-br from-emerald-50 to-teal-50 p-6 rounded-2xl border-2 border-emerald-200">
                 <div className="flex items-center gap-3 mb-4">
@@ -179,7 +232,17 @@ export default function DonationFormPage() {
                 </div>
 
                 {showItemSearch && (
-                  <div className="max-h-96 overflow-y-auto bg-white rounded-xl border-2 border-emerald-200 p-4">
+                  <AnimatePresence initial={true}>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{
+                        duration: 0.2,
+                        scale: { type: "spring", visualDuration: 0.7, bounce: 0.1 },
+                    }}
+                    exit={{ opacity: 0, scale: 1 }}
+
+                    className="max-h-96 overflow-y-auto bg-white rounded-xl border-2 border-emerald-200 p-4">
                     <div className="grid md:grid-cols-2 gap-3">
                       {filteredItems.map((item) => (
                         <button
@@ -208,7 +271,8 @@ export default function DonationFormPage() {
                         Nenhum item encontrado. Tente outro termo de busca.
                       </p>
                     )}
-                  </div>
+                  </motion.div>
+                  </AnimatePresence>
                 )}
               </div>
 
@@ -220,7 +284,7 @@ export default function DonationFormPage() {
                   </h4>
                   <div className="flex flex-wrap gap-3">
                     {getSelectedItemsDetails().map((item) => (
-                      <div
+                      <motion.div
                         key={item.id}
                         className="flex items-center gap-2 bg-linear-to-r from-emerald-100 to-teal-100 px-4 py-2 rounded-full border border-emerald-300"
                       >
@@ -233,7 +297,7 @@ export default function DonationFormPage() {
                         >
                           <X className="w-4 h-4" />
                         </button>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                 </div>
@@ -250,7 +314,7 @@ export default function DonationFormPage() {
                   placeholder="Descreva a quantidade aproximada, estado dos itens ou qualquer outra informação relevante..."
                 />
               </div>
-            </div>
+            </motion.div>
 
             {/* Submit Button */}
             <div className="pt-6 border-t-2 border-gray-200">
@@ -266,6 +330,6 @@ export default function DonationFormPage() {
           </form>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }

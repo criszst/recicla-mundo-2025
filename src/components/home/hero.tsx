@@ -8,6 +8,7 @@ import { useRef } from "react"
 import dynamic from 'next/dynamic'
 
 import { motion,  useScroll, useTransform } from "motion/react"
+import Link from "next/link"
 
 const NoSSR = dynamic(() => import('../animations/background'), { ssr: false })
 
@@ -67,6 +68,7 @@ export default function HeroSection() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-5 justify-center items-center animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500">
+         <Link href="/doar">
           <Button
             size="lg"
             className="group text-base px-10 h-14 bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white font-bold shadow-xl shadow-emerald-500/40 hover:shadow-2xl hover:shadow-emerald-500/50 hover:scale-105 transition-all"
@@ -76,6 +78,7 @@ export default function HeroSection() {
 
 
           </Button>
+         </Link>
           <a href="#sobre">
           <Button
             size="lg"

@@ -5,20 +5,6 @@ import { motion } from "motion/react"
 
 // Minimal Loading Screen Component
 export default function LoadingScreen({onFinish}: { onFinish: () => void }) {
-  const container = {
-    visible: {
-      transition: { staggerChildren: 0.06 },
-    },
-  }
-
-  const letter = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.4, ease: "easeOut" },
-    },
-  }
   return (
     <div
          className={`fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-700 delay-700`}
@@ -56,18 +42,21 @@ export default function LoadingScreen({onFinish}: { onFinish: () => void }) {
             >
               <motion.h1
                 layoutId="site-title"
-                variants={container}
-                initial="hidden"
-                animate="visible"
-                transition={{ type: "spring", stiffness: 100, damping: 20 }}
                 className="text-6xl md:text-8xl font-extrabold"
                 onAnimationComplete={onFinish}
               >
                 {"Recicla Mundo".split("").map((char, i) => (
                   <motion.span
                     key={i}
-                    variants={letter}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      delay: i * 0.06,
+                      duration: 1,
+                      ease: "easeOut"
+                    }}
                     className="inline-block bg-linear-to-r from-emerald-600 via-teal-500 to-emerald-600 bg-clip-text text-transparent"
+                    onAnimationComplete={onFinish}
                   >
                     {char === " " ? "\u00A0" : char}
                   </motion.span>

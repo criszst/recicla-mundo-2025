@@ -6,6 +6,7 @@ import { ArrowRight, FileText, Recycle, Smartphone } from "lucide-react"
 import { motion, useInView } from "motion/react"
 import Link from "next/link"
 import { useRef } from "react"
+import { SectionTitle } from "../animations/SectionTitle"
 
 // Donation Section
 export function DonationSection() {
@@ -42,31 +43,7 @@ export function DonationSection() {
       </div>
 
       <div className="container mx-auto max-w-5xl relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7 }}
-          className="text-center mb-16"
-        >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={isInView ? { scale: 1, opacity: 1 } : {}}
-            transition={{ duration: 0.5 }}
-            className="inline-block mb-4"
-          >
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold">
-              <span className="bg-linear-to-r from-emerald-700 to-teal-600 bg-clip-text text-transparent">
-                Transforme seus resíduos
-              </span>
-            </h2>
-          </motion.div>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={isInView ? { scaleX: 1 } : {}}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="w-24 h-1 bg-linear-to-r from-emerald-600 to-teal-500 mx-auto rounded-full"
-          />
-        </motion.div>
+        <SectionTitle title="Transforme seus residuos" />
 
         <motion.div
           initial={{ opacity: 0, y: 50 }}

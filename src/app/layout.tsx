@@ -5,26 +5,31 @@ import "./globals.css"
 import Header from "@/components/header/header"
 
 export const metadata: Metadata = {
-  title: "Recicla Mundo 2025 | Sustentabilidade e Educação Ambiental",
+  title: "Recicla Mundo | Sustentabilidade e Educação Ambiental",
+
   description:
-    "Transformando resíduos em recursos. Junte-se ao movimento pela sustentabilidade e combata a poluição plástica com o Recicla Mundo 2025.",
-  generator: "v0.app",
+    "Transformando resíduos em recursos. Junte-se ao movimento pela sustentabilidade e combata a poluição plástica com o Recicla Mundo.",
+
+  authors: [
+    {
+      name: "Recicla Mundo",
+      url: "https://instagram.com/reciclamundo.2025oficial",
+    },
+  ],
+
+  keywords: ["reciclagem", "sustentabilidade", "educação ambiental", "recicla mundo", "2025oficial", "recicla mundo 25"],
+
   icons: {
     icon: [
       {
-        url: "/icon-light-32x32.png",
+        url: "https://i.ibb.co/MxfqFM3s/icon-logo.jpg",
         media: "(prefers-color-scheme: light)",
       },
       {
-        url: "/icon-dark-32x32.png",
+        url: "https://i.ibb.co/MxfqFM3s/icon-logo.jpg",
         media: "(prefers-color-scheme: dark)",
       },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
     ],
-    apple: "/apple-icon.png",
   },
 }
 

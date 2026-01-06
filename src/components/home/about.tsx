@@ -2,13 +2,14 @@
 
   import { Leaf, Recycle, Heart } from "lucide-react"
 
+import { SectionTitle } from "../animations/SectionTitle"
+
   export function AboutSection({ scrollY = 0 }) {
 
     // TODO: Change parallax to function when element appears on viewport
     const sectionOffset = 400
     const parallaxOffset = (scrollY - sectionOffset) * 0.1
 
-    const fadeIn = Math.max(0, Math.min(1, (scrollY - sectionOffset + 100) / 200))
 
     return (
       <section id="sobre" className="py-24 px-4 bg-linear-to-b from-white to-emerald-50/30 relative overflow-hidden">
@@ -22,22 +23,8 @@
         />
 
         <div className="container mx-auto max-w-6xl relative z-10">
-          <div
-            className="text-center mb-16 transition-all duration-500"
-            style={{
-              opacity: fadeIn,
-              transform: `translateY(${(1 - fadeIn) * 50}px)`,
-            }}
-          >
-            <div className="inline-block bg-white/80 backdrop-blur-sm rounded-2xl px-40 py-6 shadow-xl">
-              <h2 className="text-3xl md:text-5xl font-extrabold mb-3">
-                <span className="bg-linear-to-r from-emerald-700 to-teal-600 bg-clip-text text-transparent">
-                  Sobre o Projeto
-                </span>
-              </h2>
-              <div className="w-full h-1.5 bg-linear-to-r from-emerald-600 to-teal-500 mx-auto rounded-full" />
-            </div>
-          </div>
+          <SectionTitle title="Sobre o Projeto" />
+
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             {[

@@ -128,7 +128,7 @@ export default function Header({ showTitle = true }) {
                 y: showTitle ? 0 : 8
               }}
               transition={{ duration: 1, delay: 0.3 }}
-              className="text-xl font-extrabold"
+              className="text-md font-extrabold"
             >
               <span className="bg-linear-to-r from-emerald-600 via-teal-500 to-emerald-600 bg-clip-text text-transparent">
                 Recicla Mundo

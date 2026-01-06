@@ -5,8 +5,6 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 
-import Image from "next/image"
-
 export default function Header({ showTitle = true }) {
   const [menuOpen, setMenuOpen] = useState(false)
 

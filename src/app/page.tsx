@@ -8,7 +8,7 @@ import { useEffect, useState } from "react"
 import LoadingScreen from "@/components/animations/loading"
 import Header from "@/components/header/header"
 
-import { LayoutGroup, AnimatePresence } from "framer-motion"
+import { LayoutGroup, AnimatePresence } from "motion/react"
 import ButtonTop from "@/components/ui/buttonTop"
 
 
@@ -27,7 +27,7 @@ export default function Page() {
   return (
     <LayoutGroup>
       <AnimatePresence>
-        {loading && <LoadingScreen onFinish={() => setLoading(false)} />}
+        {loading && <LoadingScreen onFinishAction={() => setLoading(false)} />}
         {!loading && (
           <>
             <Header />
@@ -57,16 +57,6 @@ export default function Page() {
             overflow-x: hidden;
           }
 
-          hidden: {
-            opacity: 0,
-            y: 20,
-            scale: 0.95,
-          },
-          visible: {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-          },
         `}</style>
     </LayoutGroup>
   )

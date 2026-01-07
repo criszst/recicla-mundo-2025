@@ -4,7 +4,7 @@ import { Leaf } from 'lucide-react'
 import { motion } from "motion/react"
 
 // Minimal Loading Screen Component
-export default function LoadingScreen({onFinish}: { onFinish: () => void }) {
+export default function LoadingScreen({onFinishAction}: { onFinishAction: () => void }) {
   return (
     <div
          className={`fixed inset-0 z-50 flex items-center justify-center bg-white transition-opacity duration-700 delay-700`}
@@ -43,7 +43,8 @@ export default function LoadingScreen({onFinish}: { onFinish: () => void }) {
               <motion.h1
                 layoutId="site-title"
                 className="text-6xl md:text-8xl font-extrabold"
-                onAnimationComplete={onFinish}
+                onAnimationComplete={onFinishAction}
+                transition={{ type: "spring", stiffness: 100, damping: 20 }}
               >
                 {"Recicla Mundo".split("").map((char, i) => (
                   <motion.span
@@ -56,7 +57,9 @@ export default function LoadingScreen({onFinish}: { onFinish: () => void }) {
                       ease: "easeOut"
                     }}
                     className="inline-block bg-linear-to-r from-emerald-600 via-teal-500 to-emerald-600 bg-clip-text text-transparent"
-                    onAnimationComplete={onFinish}
+                    onAnimationComplete={() => {
+                      setTimeout(onFinishAction, 500);
+                    }}
                   >
                     {char === " " ? "\u00A0" : char}
                   </motion.span>

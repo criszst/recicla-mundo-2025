@@ -8,7 +8,7 @@ import Link from "next/link"
 import { useRef } from "react"
 import { SectionTitle } from "../animations/SectionTitle"
 
-// Donation Section
+
 export function DonationSection() {
   const sectionRef = useRef(null)
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" })
@@ -36,7 +36,7 @@ export function DonationSection() {
       id="doar"
       className="relative py-24 md:py-32 px-4 overflow-hidden bg-linear-to-r from-white via-gray-50 to-white"
     >
-      {/* Decorative elements */}
+
       <div className="absolute inset-0 opacity-40">
         <div className="absolute top-20 right-10 w-72 h-72 bg-emerald-200 rounded-full blur-3xl" />
         <div className="absolute bottom-20 left-10 w-72 h-72 bg-teal-200 rounded-full blur-3xl" />

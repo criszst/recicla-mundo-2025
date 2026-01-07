@@ -32,7 +32,7 @@ export function Footer() {
                  <div className="bg-white/10 p-2 rounded-lg group-hover:bg-white/20 transition-colors">
                    <Mail className="w-5 h-5" />
                  </div>
-                 <span className="text-base">contato@reciclamundo.org</span>
+                 <span className="text-base">contato@loremipsum</span>
                </div>
                <div className="flex items-center gap-3 text-emerald-100">
                  <div className="bg-white/10 p-2 rounded-lg">

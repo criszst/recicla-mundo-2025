@@ -2,48 +2,53 @@
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Check, Mail, Phone, Recycle, User, X, ArrowRight } from "lucide-react"
+import { Check, Recycle, ArrowLeft, Search, Info } from "lucide-react"
 import { AnimatePresence, motion } from "motion/react"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useMemo } from "react"
+
+interface DonationItem {
+  id: string;
+  name: string;
+  category: string;
+  icon: string;
+}
 
 export default function DonationFormPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
-    address: "",
-    city: "",
-    state: "",
-    zipCode: "",
     selectedItems: [] as string[],
     itemSearch: "",
     additionalInfo: "",
   })
 
-  const [showItemSearch, setShowItemSearch] = useState(false)
+  const [activeCategory, setActiveCategory] = useState("Todos")
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const availableItems = [
+  const availableItems: DonationItem[] = [
     { id: "plastico-pet", name: "Garrafas PET", category: "Plástico", icon: "🍾" },
     { id: "plastico-embalagem", name: "Embalagens Plásticas", category: "Plástico", icon: "📦" },
-    { id: "plastico-sacolas", name: "Sacolas Plásticas", category: "Plástico", icon: "🛍️" },
     { id: "papel-jornal", name: "Jornais e Revistas", category: "Papel", icon: "📰" },
     { id: "papel-papelao", name: "Papelão", category: "Papel", icon: "📦" },
-    { id: "papel-escritorio", name: "Papel de Escritório", category: "Papel", icon: "📄" },
     { id: "vidro-garrafas", name: "Garrafas de Vidro", category: "Vidro", icon: "🍷" },
-    { id: "vidro-potes", name: "Potes de Vidro", category: "Vidro", icon: "🫙" },
     { id: "metal-latas", name: "Latas de Alumínio", category: "Metal", icon: "🥫" },
-    { id: "metal-ferro", name: "Sucata de Ferro", category: "Metal", icon: "⚙️" },
     { id: "eletronico-celular", name: "Celulares", category: "Eletrônicos", icon: "📱" },
-    { id: "eletronico-computador", name: "Computadores/Notebooks", category: "Eletrônicos", icon: "💻" },
-    { id: "eletronico-cabos", name: "Cabos e Fios", category: "Eletrônicos", icon: "🔌" },
+    { id: "eletronico-computador", name: "Notebooks", category: "Eletrônicos", icon: "💻" },
     { id: "eletronico-pilhas", name: "Pilhas e Baterias", category: "Eletrônicos", icon: "🔋" },
   ]
 
-  const filteredItems = availableItems.filter(item =>
-    item.name.toLowerCase().includes(formData.itemSearch.toLowerCase()) ||
-    item.category.toLowerCase().includes(formData.itemSearch.toLowerCase())
-  )
+  const categories = ["Todos", ...Array.from(new Set(availableItems.map(i => i.category)))]
+
+
+  const filteredItems = useMemo(() => {
+    return availableItems.filter(item => {
+      const matchesSearch = item.name.toLowerCase().includes(formData.itemSearch.toLowerCase())
+      const matchesCategory = activeCategory === "Todos" || item.category === activeCategory
+      return matchesSearch && matchesCategory
+    })
+  }, [formData.itemSearch, activeCategory])
 
   const toggleItem = (itemId: string) => {
     setFormData(prev => ({
@@ -54,279 +59,213 @@ export default function DonationFormPage() {
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    alert("Obrigado pela sua doação! Entraremos em contato em breve para agendar a coleta.")
-    console.log("Dados do formulário:", formData)
+
+  const handleSendEmail = async (data: typeof formData) => {
+    setIsSubmitting(true)
+    try {
+      // TODO: futura implementacao da api pro email
+      console.log("Enviando para API:", data)
+
+    } catch (error: unknown) {
+      alert("Erro ao enviar. Tente novamente.")
+      console.log(error)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
-  const getSelectedItemsDetails = () => {
-    return availableItems.filter(item => formData.selectedItems.includes(item.id))
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (formData.selectedItems.length === 0) return
+    handleSendEmail(formData)
   }
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -40 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{
-          duration: 0.2,
-          scale: { type: "spring", visualDuration: 0.7, bounce: 0.1 },
-      }}
-      className="min-h-screen bg-linear-to-br from-emerald-50 via-white to-teal-50 pt-24 pb-16 px-4">
-      <div className="container mx-auto max-w-4xl">
-        <div className="mb-8">
-          <Link href="/">
-          <button
-            className="flex items-center gap-2 text-emerald-700 hover:text-emerald-800 font-semibold transition-colors group"
-          >
-            <ArrowRight className="w-5 h-5 rotate-180 group-hover:-translate-x-1 transition-transform" />
-            Voltar para Início
-          </button>
-          </Link>
-        </div>
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="min-h-screen bg-slate-50 pt-20 pb-16 px-4"
+    >
+      <div className="container mx-auto max-w-3xl">
+        <Link href="/" className="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-medium mb-8 group">
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+          Voltar para o início
+        </Link>
 
-        <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 md:p-12 border-2 border-emerald-100">
-          <div className="text-center mb-10">
-            <h1 className="text-4xl md:text-5xl font-extrabold mb-3">
-              <span className="bg-linear-to-r from-emerald-700 to-teal-600 bg-clip-text text-transparent">
-                Doação de Itens
-              </span>
-            </h1>
-            <p className="text-lg text-gray-600">
-              Preencha os dados abaixo para doar seus materiais recicláveis.
-            </p>
+        <div className="bg-white rounded-[2rem] shadow-xl shadow-emerald-900/5 overflow-hidden border border-emerald-100">
+
+          <div className="bg-emerald-600 p-8 text-white text-center">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="inline-block p-3 bg-white/20 rounded-2xl mb-4 backdrop-blur-md"
+            >
+              <Recycle className="w-8 h-8" />
+            </motion.div>
+            <h1 className="text-3xl font-bold">Doação de Itens</h1>
+            <p className="text-emerald-100 mt-2">Transforme seu descarte em oportunidade</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-8">
-
-            <div className="space-y-6">
-              <motion.div className="flex items-center gap-3 pb-3 border-b border-gray-200">
-
-                <div className="w-10 h-10 rounded-full bg-linear-to-r from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold shadow-md">
-                  1
-                </div>
-
-                <div>
-                  <h3 className="text-xl md:text-2xl font-bold text-gray-900">Dados Pessoais</h3>
-                  <p className="text-sm text-gray-500">Informações para contato e coleta</p>
-                </div>
-
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0 }}
-                transition={{
-                  duration: 0.5,
-                   scale: { type: "spring", visualDuration: 0.4, bounce: 0.2 }
-                }}
-              >
-
-                <label className="block text-sm font-bold text-gray-700 mb-2">Nome Completo *</label>
-                <div className="relative">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                  <Input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="pl-12 h-12 border-2 border-gray-300 focus:border-emerald-500 rounded-xl"
-                    placeholder="João Silva"
-                  />
-                </div>
-
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0 }}
-                transition={{
-                  duration: 0.5,
-                  scale: { type: "spring", visualDuration: 0.4, bounce: 0.2 }
-                }}
-
-                className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">E-mail *</label>
-                  <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <Input
-                      type="email"
-                      required
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="pl-12 h-12 border-2 border-gray-300 focus:border-emerald-500 rounded-xl"
-                      placeholder="joao@email.com"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">Telefone *</label>
-                  <div className="relative">
-                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <Input
-                      type="tel"
-                      required
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="pl-12 h-12 border-2 border-gray-300 focus:border-emerald-500 rounded-xl"
-                      placeholder="(11) 98765-4321"
-                    />
-                  </div>
-                </div>
-              </motion.div>
-            </div>
+          <form onSubmit={handleSubmit} className="p-8 md:p-12 space-y-10">
 
 
-
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0 }}
-              transition={{
-                duration: 0.5,
-                scale: { type: "spring", visualDuration: 0.4, bounce: 0.2 }
-              }}
-              className="space-y-6">
-              <motion.div className="flex items-center gap-3 pb-3 border-b border-gray-200">
-                <div className="w-10 h-10 rounded-full bg-linear-to-r from-emerald-600 to-teal-600 flex items-center justify-center text-white font-bold shadow-md">
-                  2
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-900">Itens para Doação</h3>
-                  <p className="text-sm text-gray-600 mt-1">Selecione os materiais que você deseja doar</p>
-                </div>
-              </motion.div>
-
-
-              <div className="bg-linear-to-br from-emerald-50 to-teal-50 p-6 rounded-2xl border-2 border-emerald-200">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="relative flex-1">
-                    <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    <Input
-                      type="text"
-                      value={formData.itemSearch}
-                      onChange={(e) => {
-                        setFormData({ ...formData, itemSearch: e.target.value })
-                        setShowItemSearch(true)
-                      }}
-                      onFocus={() => setShowItemSearch(true)}
-                      className="pl-12 h-12 border-2 border-emerald-300 focus:border-emerald-500 rounded-xl bg-white"
-                      placeholder="Buscar item ou categoria (ex: plástico, celular...)"
-                    />
-                  </div>
-                  <Button
-                    type="button"
-                    onClick={() => setShowItemSearch(!showItemSearch)}
-                    className="h-12 px-6 bg-emerald-600 hover:bg-emerald-700"
-                  >
-                    {showItemSearch ? "Ocultar" : "Mostrar Todos"}
-                  </Button>
-                </div>
-
-                {showItemSearch && (
-                  <AnimatePresence initial={true}>
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{
-                        duration: 0.2,
-                        scale: { type: "spring", visualDuration: 0.7, bounce: 0.1 },
-                    }}
-                    exit={{ opacity: 0, scale: 1 }}
-
-                    className="max-h-96 overflow-y-auto bg-white rounded-xl border-2 border-emerald-200 p-4">
-                    <div className="grid md:grid-cols-2 gap-3">
-                      {filteredItems.map((item) => (
-                        <button
-                          key={item.id}
-                          type="button"
-                          onClick={() => toggleItem(item.id)}
-                          className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all text-left ${
-                            formData.selectedItems.includes(item.id)
-                              ? "border-emerald-600 bg-emerald-50 shadow-md"
-                              : "border-gray-200 hover:border-emerald-300 bg-white"
-                          }`}
-                        >
-                          <div className="shrink-0 text-3xl">{item.icon}</div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-bold text-gray-900 truncate">{item.name}</p>
-                            <p className="text-sm text-gray-600">{item.category}</p>
-                          </div>
-                          {formData.selectedItems.includes(item.id) && (
-                            <Check className="w-6 h-6 text-emerald-600 shrink-0" />
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                    {filteredItems.length === 0 && (
-                      <p className="text-center text-gray-500 py-8">
-                        Nenhum item encontrado. Tente outro termo de busca.
-                      </p>
-                    )}
-                  </motion.div>
-                  </AnimatePresence>
-                )}
+            <section className="space-y-6">
+              <div className="flex items-center gap-3">
+                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold">1</span>
+                <h2 className="text-xl font-bold text-gray-800">Seus Dados</h2>
               </div>
 
-              {formData.selectedItems.length > 0 && (
-                <div className="bg-white border-2 border-emerald-200 rounded-2xl p-6">
-                  <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
-                    <Check className="w-5 h-5 text-emerald-600" />
-                    Itens Selecionados ({formData.selectedItems.length})
-                  </h4>
-                  <div className="flex flex-wrap gap-3">
-                    {getSelectedItemsDetails().map((item) => (
-                      <motion.div
-                        key={item.id}
-                        className="flex items-center gap-2 bg-linear-to-r from-emerald-100 to-teal-100 px-4 py-2 rounded-full border border-emerald-300"
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="md:col-span-2">
+                  <label className="text-sm font-semibold text-gray-600 ml-1">Nome Completo</label>
+                  <Input
+                    required
+                    placeholder="Como podemos te chamar?"
+                    className="h-12 rounded-xl border-gray-200 focus:ring-emerald-500"
+                    value={formData.name}
+                    onChange={e => setFormData({...formData, name: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-gray-600 ml-1">WhatsApp / Telefone</label>
+                  <Input
+                    required
+                    placeholder="(00) 00000-0000"
+                    className="h-12 rounded-xl border-gray-200"
+                    value={formData.phone}
+                    onChange={e => setFormData({...formData, phone: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-gray-600 ml-1">E-mail</label>
+                  <Input
+                    required
+                    type="email"
+                    placeholder="email@exemplo.com"
+                    className="h-12 rounded-xl border-gray-200"
+                    value={formData.email}
+                    onChange={e => setFormData({...formData, email: e.target.value})}
+                  />
+                </div>
+              </div>
+            </section>
+
+
+            <section className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold">2</span>
+                  <h2 className="text-xl font-bold text-gray-800">O que você vai doar?</h2>
+                </div>
+                <span className="text-xs font-bold bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full">
+                  {formData.selectedItems.length} selecionados
+                </span>
+              </div>
+
+              <div className="space-y-4">
+
+                <div className="flex flex-col gap-4">
+                  <div className="relative">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                    <Input
+                      placeholder="Busque por material (ex: Vidro, Papelão...)"
+                      className="pl-12 h-14 rounded-2xl border-2 border-emerald-50 focus:border-emerald-500 bg-emerald-50/30"
+                      value={formData.itemSearch}
+                      onChange={e => setFormData({...formData, itemSearch: e.target.value})}
+                    />
+                  </div>
+
+                  <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                    {categories.map(cat => (
+                      <button
+                        key={cat}
+                        type="button"
+                        onClick={() => setActiveCategory(cat)}
+                        className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
+                          activeCategory === cat
+                          ? "bg-emerald-600 text-white"
+                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                        }`}
                       >
-                        <span className="text-xl">{item.icon}</span>
-                        <span className="font-semibold text-gray-900 text-sm">{item.name}</span>
-                        <button
-                          type="button"
-                          onClick={() => toggleItem(item.id)}
-                          className="ml-1 text-emerald-700 hover:text-emerald-900"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </motion.div>
+                        {cat}
+                      </button>
                     ))}
                   </div>
                 </div>
-              )}
 
-              <div>
-                <label className="block text-sm font-bold text-gray-700 mb-2">
-                  Informações Adicionais (opcional)
-                </label>
-                <textarea
-                  value={formData.additionalInfo}
-                  onChange={(e) => setFormData({ ...formData, additionalInfo: e.target.value })}
-                  className="w-full h-32 p-4 border-2 border-gray-300 focus:border-emerald-500 rounded-xl resize-none"
-                  placeholder="Descreva a quantidade aproximada, estado dos itens ou qualquer outra informação relevante..."
-                />
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  <AnimatePresence mode="popLayout">
+                    {filteredItems.map(item => (
+                      <motion.button
+                        layout
+                        key={item.id}
+                        type="button"
+                        onClick={() => toggleItem(item.id)}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        whileTap={{ scale: 0.95 }}
+                        className={`relative p-4 rounded-2xl border-2 transition-all flex flex-col items-center text-center gap-2 ${
+                          formData.selectedItems.includes(item.id)
+                          ? "border-emerald-500 bg-emerald-50"
+                          : "border-gray-100 bg-white hover:border-emerald-200"
+                        }`}
+                      >
+                        <span className="text-3xl">{item.icon}</span>
+                        <span className="text-xs font-bold text-gray-800 leading-tight">{item.name}</span>
+                        {formData.selectedItems.includes(item.id) && (
+                          <motion.div
+                            initial={{ scale: 0 }} animate={{ scale: 1 }}
+                            className="absolute -top-2 -right-2 bg-emerald-500 text-white rounded-full p-1"
+                          >
+                            <Check className="w-3 h-3" strokeWidth={4} />
+                          </motion.div>
+                        )}
+                      </motion.button>
+                    ))}
+                  </AnimatePresence>
+                </div>
               </div>
-            </motion.div>
+            </section>
 
-            {/* Submit Button */}
-            <div className="pt-6 border-t-2 border-gray-200">
-              <Button
-                type="submit"
-                disabled={formData.selectedItems.length === 0}
-                className="w-full h-16 text-xl font-bold bg-linear-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl hover:scale-105 transition-all"
-              >
-                <Recycle className="mr-3 w-6 h-6" />
-                Confirmar Doação
-              </Button>
-            </div>
+
+            <section className="space-y-4">
+               <div className="flex items-center gap-3">
+                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold">3</span>
+                <h2 className="text-xl font-bold text-gray-800">Mais detalhes</h2>
+              </div>
+              <div className="relative">
+                <textarea
+                  placeholder="Ex: 'Os vidros estão em caixas'..."
+                  className="w-full h-32 p-4 rounded-2xl border-gray-200 focus:ring-emerald-500 focus:border-emerald-500 resize-none bg-gray-50/50"
+                  value={formData.additionalInfo}
+                  onChange={e => setFormData({...formData, additionalInfo: e.target.value})}
+                />
+                <div className="absolute bottom-3 right-3 text-gray-400">
+                  <Info className="w-4 h-4" />
+                </div>
+              </div>
+            </section>
+
+
+            <Button
+              type="submit"
+              disabled={formData.selectedItems.length === 0 || isSubmitting}
+              className="w-full h-16 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-lg font-bold shadow-lg shadow-emerald-200 transition-all active:scale-95"
+            >
+              {isSubmitting ? (
+                <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1 }}>
+                  <Recycle className="w-6 h-6" />
+                </motion.div>
+              ) : (
+                <>Solicitar Coleta Agora</>
+              )}
+            </Button>
+
+            <p className="text-center text-xs text-gray-400">
+              Ao enviar, nossa equipe analisará os itens e entrará em contato via WhatsApp.
+            </p>
           </form>
         </div>
       </div>

@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 
 import "./globals.css"
+import Header from "@/components/header/header"
 
 export const metadata: Metadata = {
   title: "Recicla Mundo | Sustentabilidade e Educação Ambiental",
@@ -40,6 +41,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans antialiased`}>
+        <Header />
            {children}
       </body>
     </html>

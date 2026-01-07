@@ -10,7 +10,7 @@ import dynamic from 'next/dynamic'
 import { motion,  useScroll, useTransform } from "motion/react"
 import Link from "next/link"
 
-const NoSSR = dynamic(() => import('../animations/background'), { ssr: false })
+const NoSSR = dynamic(() => import('@/components/animations/background'), { ssr: false })
 
 export default function HeroSection() {
   const heroRef = useRef<HTMLElement>(null)

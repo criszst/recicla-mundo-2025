@@ -5,7 +5,7 @@ import { AboutSection } from "@/components/home/about"
 import { DonationSection } from "@/components/home/donation"
 import { Footer } from "@/components/footer/footer"
 import { useEffect, useState } from "react"
-import LoadingScreen from "@/components/animations/loading"
+import LoadingScreen from "@/components/animations/LoadingScreen"
 import Header from "@/components/header/header"
 
 import { LayoutGroup, AnimatePresence } from "motion/react"
